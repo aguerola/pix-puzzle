@@ -22,17 +22,17 @@
 
 | Role | Token | Hex | Use |
 |------|-------|-----|-----|
-| App background | `color.surface.app` | `#F4F1EC` | Scaffold |
-| Surface | `color.surface.raised` | `#FFFCF8` | Cards / tiles |
-| Ink | `color.ink.primary` | `#1A1A1A` | Filled cells, titles |
-| Ink muted | `color.ink.muted` | `#5C5A56` | Secondary labels |
-| Cell empty | `color.cell.empty` | `#FFFFFF` | Unfilled board cells |
-| Cell border | `color.cell.border` | `#B8B4AC` | Grid lines |
-| Accent | `color.accent.stamp` | `#2F6F6A` | Selected difficulty, primary actions |
+| App background | `color.surface.app` | `#FAF7F0` | Scaffold |
+| Surface | `color.surface.raised` | `#FFFCF7` | Cards / tiles |
+| Ink | `color.ink.primary` | `#20252B` | Filled cells, titles |
+| Ink muted | `color.ink.muted` | `#575D64` | Secondary labels |
+| Cell empty | `color.cell.empty` | `#FFFCF7` | Unfilled board cells |
+| Cell border | `color.cell.border` | `#73736F` | Grid lines |
+| Accent | `color.accent.stamp` | `#B84433` | Selected difficulty, primary actions |
 | On accent | `color.accent.onStamp` | `#FFFFFF` | Text on accent |
-| Success | `color.accent.done` | `#3D8B6E` | Level complete / done check |
-| Danger soft | `color.accent.reset` | `#8B4A3D` | Reset (not destructive red scream) |
-| Focus | `color.accent.focus` | `#2F6F6A` | Visible focus / ring |
+| Success | `color.accent.done` | `#30654E` | Level complete / done check |
+| Danger soft | `color.accent.reset` | `#9B4033` | Reset (not destructive red scream) |
+| Focus | `color.accent.focus` | `#EF7D68` | Visible focus / ring |
 
 **Contrast:** body text on app ≥4.5:1; filled cells stay pure black/white for puzzle legibility.
 
@@ -94,3 +94,15 @@
 | Game HUD | `features/game/game_page.dart` |
 | Win dialog | `features/game/complete_dialog.dart` |
 | Grid paint | `widgets/board_grid.dart` |
+
+
+## Approved editorial redesign
+
+User approved the mobile concept on 2026-10-11. Warm paper, charcoal grids, large editorial headings, coral focus (`PixColors.focus` = `#EF7D68`) and dark coral actions. White text on filled actions remains `#FFFFFF`. No gradients, illustrations or raster assets required.
+
+- Mobile catalogue: difficulty chips above full-width list; meaningful display titles without changing stored IDs; completion count and first pending level.
+- Game: brand/help header, title/difficulty, compact objective and stamp, dominant play board, labeled Undo/Reset controls and levels footer. Spanish interface.
+- Tap commits on release; each cell exposes a native button and row/column state. Last move receives a coral inset ring.
+- Boards larger than 7×7 offer a fullscreen pan/zoom view with at least 48px cells at base scale; drag does not stamp.
+- Reset requires confirmation after moves. Completion offers a correctly labeled final-level action.
+- Content scrolls on short screens or enlarged text; actions stack when required. Layout checked at 320px with 100% and 200% text scale.

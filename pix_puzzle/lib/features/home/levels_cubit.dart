@@ -5,9 +5,9 @@ import '../../data/models/level.dart';
 import '../../data/repositories/levels_repository.dart';
 
 enum Difficulty {
-  easy('1_', 'Easy'),
-  medium('2_', 'Medium'),
-  hard('3_', 'Hard');
+  easy('1_', 'Fácil'),
+  medium('2_', 'Media'),
+  hard('3_', 'Difícil');
 
   const Difficulty(this.prefix, this.label);
   final String prefix;
@@ -26,10 +26,7 @@ class LevelsLoading extends LevelsState {
 }
 
 class LevelsLoaded extends LevelsState {
-  const LevelsLoaded({
-    required this.difficulty,
-    required this.levels,
-  });
+  const LevelsLoaded({required this.difficulty, required this.levels});
 
   final Difficulty difficulty;
   final List<Level> levels;

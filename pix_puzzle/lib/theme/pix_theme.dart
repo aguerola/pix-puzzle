@@ -1,51 +1,87 @@
 import 'package:flutter/material.dart';
 
-/// Paper + ink tokens for Pix-Puzzle (see design-system/pix-puzzle/MASTER.md).
 abstract final class PixColors {
-  static const app = Color(0xFFF4F1EC);
-  static const raised = Color(0xFFFFFCF8);
-  static const ink = Color(0xFF1A1A1A);
-  static const inkMuted = Color(0xFF5C5A56);
-  static const cellEmpty = Color(0xFFFFFFFF);
-  static const cellBorder = Color(0xFFB8B4AC);
-  static const stamp = Color(0xFF2F6F6A);
-  static const onStamp = Color(0xFFFFFFFF);
-  static const done = Color(0xFF3D8B6E);
-  static const reset = Color(0xFF8B4A3D);
+  static const app = Color(0xFFFAF7F0);
+  static const raised = Color(0xFFFFFCF7);
+  static const ink = Color(0xFF20252B);
+  static const inkMuted = Color(0xFF575D64);
+  static const cellEmpty = Color(0xFFFFFCF7);
+  static const cellBorder = Color(0xFF73736F);
+  static const stamp = Color(0xFFB84433);
+  static const focus = Color(0xFFEF7D68);
+  static const onStamp = Colors.white;
+  static const done = Color(0xFF30654E);
+  static const reset = Color(0xFF9B4033);
 }
 
 ThemeData buildPixTheme() {
-  final base = ColorScheme.fromSeed(
+  final scheme = ColorScheme.fromSeed(
     seedColor: PixColors.stamp,
     brightness: Brightness.light,
     primary: PixColors.stamp,
     onPrimary: PixColors.onStamp,
     surface: PixColors.app,
     onSurface: PixColors.ink,
-    secondary: PixColors.done,
-    onSecondary: PixColors.onStamp,
   );
-
   return ThemeData(
     useMaterial3: true,
-    colorScheme: base,
+    colorScheme: scheme,
     scaffoldBackgroundColor: PixColors.app,
+    textTheme: const TextTheme(
+      displaySmall: TextStyle(
+        fontSize: 40,
+        height: 1.05,
+        fontWeight: FontWeight.w800,
+        letterSpacing: -1.6,
+        color: PixColors.ink,
+      ),
+      headlineMedium: TextStyle(
+        fontSize: 32,
+        height: 1.12,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -1,
+        color: PixColors.ink,
+      ),
+      titleLarge: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.w700,
+        color: PixColors.ink,
+      ),
+      bodyMedium: TextStyle(
+        fontSize: 15,
+        height: 1.5,
+        color: PixColors.inkMuted,
+      ),
+    ),
     appBarTheme: const AppBarTheme(
-      centerTitle: true,
       backgroundColor: PixColors.app,
       foregroundColor: PixColors.ink,
       elevation: 0,
-      scrolledUnderElevation: 0.5,
+      scrolledUnderElevation: 0,
     ),
     dividerTheme: const DividerThemeData(
-      color: Color(0xFFE4DFD6),
-      space: 1,
+      color: Color(0xFFE1DDD4),
       thickness: 1,
+      space: 1,
     ),
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
-        minimumSize: const Size(48, 48),
+        minimumSize: const Size(48, 52),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        minimumSize: const Size(48, 52),
+        foregroundColor: PixColors.ink,
+        side: const BorderSide(color: PixColors.ink),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        minimumSize: const Size(48, 48),
+        foregroundColor: PixColors.ink,
       ),
     ),
     iconButtonTheme: IconButtonThemeData(
@@ -53,10 +89,6 @@ ThemeData buildPixTheme() {
         minimumSize: const Size(48, 48),
         foregroundColor: PixColors.ink,
       ),
-    ),
-    listTileTheme: const ListTileThemeData(
-      iconColor: PixColors.inkMuted,
-      textColor: PixColors.ink,
     ),
     dialogTheme: DialogThemeData(
       backgroundColor: PixColors.raised,

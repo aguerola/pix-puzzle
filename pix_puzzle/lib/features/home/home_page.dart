@@ -1,227 +1,200 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../data/models/level.dart';
 import '../../theme/pix_theme.dart';
 import '../../widgets/board_grid.dart';
+import '../../widgets/pix_chrome.dart';
 import '../game/game_page.dart';
 import 'levels_cubit.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Pix-Puzzle')),
-      body: BlocBuilder<LevelsCubit, LevelsState>(
-        builder: (context, state) {
-          return switch (state) {
-            LevelsLoading() => const Center(child: CircularProgressIndicator()),
-            LevelsError(:final message) => _ErrorBody(message: message),
-            LevelsLoaded(:final difficulty, :final levels) => Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _DifficultyColumn(selected: difficulty),
-                  Expanded(
-                    child: levels.isEmpty
-                        ? Center(
-                            child: Text(
-                              'No levels',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(color: PixColors.inkMuted),
-                            ),
-                          )
-                        : ListView.separated(
-                            padding: const EdgeInsets.fromLTRB(0, 8, 12, 16),
-                            itemCount: levels.length,
-                            separatorBuilder: (_, _) =>
-                                const Divider(height: 1),
-                            itemBuilder: (context, index) {
-                              final level = levels[index];
-                              return _LevelTile(
-                                level: level,
-                                onTap: () => _openLevel(context, level),
-                              );
-                            },
-                          ),
-                  ),
-                ],
-              ),
-          };
-        },
-      ),
-    );
-  }
-
-  Future<void> _openLevel(BuildContext context, Level level) async {
+  void _open(BuildContext context, Level level) {
     final cubit = context.read<LevelsCubit>();
-    final result = await Navigator.of(context).push<GameExitAction>(
-      MaterialPageRoute(
-        builder: (_) => GamePage(
-          level: level,
-          levelsCubit: cubit,
-        ),
-      ),
-    );
-    if (!context.mounted) return;
-    if (result == GameExitAction.refresh) {
-      // Progress already marked via cubit inside GamePage.
-    }
-  }
-}
-
-class _ErrorBody extends StatelessWidget {
-  const _ErrorBody({required this.message});
-
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-            const SizedBox(height: 16),
-            FilledButton(
-              onPressed: () => context.read<LevelsCubit>().load(),
-              child: const Text('Retry'),
-            ),
-          ],
-        ),
+    Navigator.of(context).push(
+      MaterialPageRoute<GameExitAction>(
+        builder: (_) => GamePage(level: level, levelsCubit: cubit),
       ),
     );
   }
-}
-
-class _DifficultyColumn extends StatelessWidget {
-  const _DifficultyColumn({required this.selected});
-
-  final Difficulty selected;
 
   @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      label: 'Difficulty',
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(12, 16, 8, 16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            for (final d in Difficulty.values)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: SizedBox(
-                  width: 104,
-                  child: FilledButton(
-                    style: FilledButton.styleFrom(
-                      backgroundColor: d == selected
-                          ? PixColors.stamp
-                          : PixColors.raised,
-                      foregroundColor: d == selected
-                          ? PixColors.onStamp
-                          : PixColors.ink,
-                      side: BorderSide(
-                        color: d == selected
-                            ? PixColors.stamp
-                            : PixColors.cellBorder,
-                      ),
-                    ),
-                    onPressed: () =>
-                        context.read<LevelsCubit>().setDifficulty(d),
-                    child: Text(d.label),
-                  ),
-                ),
-              ),
-          ],
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(
+      title: const PixBrand(),
+      actions: [
+        IconButton(
+          tooltip: 'Cómo jugar',
+          icon: const Icon(Icons.help_outline),
+          onPressed: () => showPixHelp(context),
         ),
-      ),
-    );
-  }
-}
-
-class _LevelTile extends StatelessWidget {
-  const _LevelTile({required this.level, required this.onTap});
-
-  final Level level;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
+        const SizedBox(width: 8),
+      ],
+    ),
+    body: SafeArea(
+      child: Align(
+        alignment: Alignment.topCenter,
         child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: 72),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-            child: Row(
-              children: [
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: PixColors.raised,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: PixColors.cellBorder),
-                  ),
+          constraints: const BoxConstraints(maxWidth: 640),
+          child: BlocBuilder<LevelsCubit, LevelsState>(
+            builder: (context, state) {
+              if (state is LevelsLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (state is LevelsError) {
+                return Center(
                   child: Padding(
-                    padding: const EdgeInsets.all(6),
-                    child: BoardGrid(table: level.tableModel, size: 64),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Tooltip(
-                  message: 'Stamp brush',
-                  child: BoardGrid(table: level.tableBrush, size: 36),
-                ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        level.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: textTheme.titleSmall?.copyWith(
-                          color: PixColors.ink,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      if (level.done) ...[
-                        const SizedBox(height: 2),
-                        Text(
-                          'Done',
-                          style: textTheme.labelMedium?.copyWith(
-                            color: PixColors.done,
-                          ),
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text('No pudimos cargar los niveles.'),
+                        const SizedBox(height: 16),
+                        FilledButton(
+                          onPressed: () => context.read<LevelsCubit>().load(),
+                          child: const Text('Reintentar'),
                         ),
                       ],
-                    ],
+                    ),
                   ),
-                ),
-                if (level.done)
-                  const Icon(
-                    Icons.check_circle,
-                    color: PixColors.done,
-                    semanticLabel: 'Completed',
+                );
+              }
+              final loaded = state as LevelsLoaded;
+              final done = loaded.levels.where((l) => l.done).length;
+              final next = loaded.levels.where((l) => !l.done).firstOrNull;
+              return CustomScrollView(
+                slivers: [
+                  SliverPadding(
+                    padding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
+                    sliver: SliverToBoxAdapter(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Un toque.\nOtro patrón.',
+                            style: Theme.of(context).textTheme.displaySmall,
+                          ),
+                          const SizedBox(height: 12),
+                          const Text(
+                            'Elige un reto y encuentra su equilibrio.',
+                          ),
+                          const SizedBox(height: 24),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: [
+                              for (final d in Difficulty.values)
+                                ChoiceChip(
+                                  label: Text(d.label),
+                                  selected: loaded.difficulty == d,
+                                  showCheckmark: true,
+                                  onSelected: (_) => context
+                                      .read<LevelsCubit>()
+                                      .setDifficulty(d),
+                                ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          Text(
+                            '$done de ${loaded.levels.length} completados',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          const SizedBox(height: 16),
+                          if (next != null)
+                            SizedBox(
+                              width: double.infinity,
+                              child: FilledButton.icon(
+                                onPressed: () => _open(context, next),
+                                icon: const Icon(Icons.arrow_forward),
+                                label: Text(
+                                  'Jugar ${levelTitle(next).toLowerCase()}',
+                                ),
+                              ),
+                            ),
+                          if (loaded.levels.isEmpty)
+                            const Text(
+                              'No hay niveles en esta dificultad. Prueba otra.',
+                            ),
+                          const SizedBox(height: 20),
+                          const PixLabel('Tus retos'),
+                        ],
+                      ),
+                    ),
                   ),
-              ],
-            ),
+                  SliverPadding(
+                    padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
+                    sliver: SliverList.builder(
+                      itemCount: loaded.levels.length,
+                      itemBuilder: (context, index) {
+                        final level = loaded.levels[index];
+                        return Column(
+                          children: [
+                            InkWell(
+                              onTap: () => _open(context, level),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 20,
+                                ),
+                                child: Row(
+                                  children: [
+                                    BoardGrid(
+                                      table: level.tableModel,
+                                      size: 64,
+                                      semanticLabel:
+                                          'Objetivo del nivel ${levelNumber(level)}',
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            levelTitle(level),
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            '${level.size} × ${level.size}${level.done ? ' · Completado' : ''}',
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    BoardGrid(
+                                      table: level.tableBrush,
+                                      size: 30,
+                                      semanticLabel: 'Sello',
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Icon(
+                                      level.done
+                                          ? Icons.check_circle_outline
+                                          : Icons.arrow_forward,
+                                      size: 20,
+                                      color: level.done
+                                          ? PixColors.done
+                                          : PixColors.ink,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const Divider(),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
 }
