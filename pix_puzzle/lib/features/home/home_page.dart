@@ -20,17 +20,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const PixBrand(),
-      actions: [
-        IconButton(
-          tooltip: 'Cómo jugar',
-          icon: const Icon(Icons.help_outline),
-          onPressed: () => showPixHelp(context),
-        ),
-        const SizedBox(width: 8),
-      ],
-    ),
     body: SafeArea(
       child: Align(
         alignment: Alignment.topCenter,
@@ -68,56 +57,84 @@ class HomePage extends StatelessWidget {
               return CustomScrollView(
                 slivers: [
                   SliverPadding(
-                    padding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
+                    padding: const EdgeInsets.fromLTRB(24, 16, 12, 8),
                     sliver: SliverToBoxAdapter(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Un toque.\nOtro patrón.',
-                            style: Theme.of(context).textTheme.displaySmall,
-                          ),
-                          const SizedBox(height: 12),
-                          const Text(
-                            'Elige un reto y encuentra su equilibrio.',
-                          ),
-                          const SizedBox(height: 24),
-                          Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
+                          const Row(
                             children: [
-                              for (final d in Difficulty.values)
-                                ChoiceChip(
-                                  label: Text(d.label),
-                                  selected: loaded.difficulty == d,
-                                  showCheckmark: true,
-                                  onSelected: (_) => context
-                                      .read<LevelsCubit>()
-                                      .setDifficulty(d),
-                                ),
+                              Expanded(child: PixBrand()),
+                              PixHelpButton(),
                             ],
                           ),
                           const SizedBox(height: 20),
-                          Text(
-                            '$done de ${loaded.levels.length} completados',
-                            style: Theme.of(context).textTheme.bodyMedium,
+                          Padding(
+                            padding: const EdgeInsets.only(right: 12),
+                            child: Text(
+                              'Un toque.\nOtro patrón.',
+                              style: Theme.of(context).textTheme.displaySmall,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          const Padding(
+                            padding: EdgeInsets.only(right: 12),
+                            child: Text(
+                              'Elige un reto y encuentra su equilibrio.',
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 12),
+                            child: Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: [
+                                for (final d in Difficulty.values)
+                                  ChoiceChip(
+                                    label: Text(d.label),
+                                    selected: loaded.difficulty == d,
+                                    showCheckmark: true,
+                                    onSelected: (_) => context
+                                        .read<LevelsCubit>()
+                                        .setDifficulty(d),
+                                  ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 12),
+                            child: Text(
+                              '$done de ${loaded.levels.length} completados',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
                           ),
                           const SizedBox(height: 16),
                           if (next != null)
-                            SizedBox(
-                              width: double.infinity,
-                              child: FilledButton.icon(
-                                onPressed: () => _open(context, next),
-                                icon: const Icon(Icons.arrow_forward),
-                                label: Text('Jugar ${levelPlayLabel(next)}'),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 12),
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: FilledButton.icon(
+                                  onPressed: () => _open(context, next),
+                                  icon: const Icon(Icons.arrow_forward),
+                                  label: Text('Jugar ${levelPlayLabel(next)}'),
+                                ),
                               ),
                             ),
                           if (loaded.levels.isEmpty)
-                            const Text(
-                              'No hay niveles en esta dificultad. Prueba otra.',
+                            const Padding(
+                              padding: EdgeInsets.only(right: 12),
+                              child: Text(
+                                'No hay niveles en esta dificultad. Prueba otra.',
+                              ),
                             ),
                           const SizedBox(height: 20),
-                          const PixLabel('Tus retos'),
+                          const Padding(
+                            padding: EdgeInsets.only(right: 12),
+                            child: PixLabel('Tus retos'),
+                          ),
                         ],
                       ),
                     ),

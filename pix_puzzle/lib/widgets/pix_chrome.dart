@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import '../data/models/board_cell.dart';
 import '../data/models/level.dart';
-import '../theme/pix_theme.dart';
+import 'board_grid.dart';
 
 String levelNumber(Level level) =>
     int.tryParse(level.name.split('_').elementAtOrNull(1) ?? '')?.toString() ??
@@ -32,6 +33,13 @@ String levelDifficulty(Level level) => switch (level.name.split('_').first) {
   _ => 'Difícil',
 };
 
+/// Center-only 3×3 stamp — same table shape as the in-game brush widget.
+final List<List<BoardCell>> pixBrandStamp = List.generate(
+  3,
+  (x) => List.generate(3, (y) => BoardCell(fill: x == 1 && y == 1)),
+);
+
+/// Stamp [BoardGrid] + wordmark.
 class PixBrand extends StatelessWidget {
   const PixBrand({super.key});
   @override
@@ -39,25 +47,9 @@ class PixBrand extends StatelessWidget {
     mainAxisSize: MainAxisSize.min,
     children: [
       ExcludeSemantics(
-        child: SizedBox(
-          width: 28,
-          height: 28,
-          child: GridView.count(
-            crossAxisCount: 3,
-            padding: EdgeInsets.zero,
-            physics: const NeverScrollableScrollPhysics(),
-            children: List.generate(
-              9,
-              (i) => ColoredBox(
-                color: [0, 4, 6, 8].contains(i)
-                    ? PixColors.ink
-                    : Colors.transparent,
-              ),
-            ),
-          ),
-        ),
+        child: BoardGrid(table: pixBrandStamp, size: 28),
       ),
-      const SizedBox(width: 12),
+      const SizedBox(width: 10),
       const Flexible(
         child: Text(
           'pix puzzle',
@@ -83,6 +75,17 @@ class PixLabel extends StatelessWidget {
       letterSpacing: 1.8,
       fontWeight: FontWeight.w600,
     ),
+  );
+}
+
+/// Help control for title rows (no AppBar brand chrome).
+class PixHelpButton extends StatelessWidget {
+  const PixHelpButton({super.key});
+  @override
+  Widget build(BuildContext context) => IconButton(
+    tooltip: 'Cómo jugar',
+    icon: const Icon(Icons.help_outline),
+    onPressed: () => showPixHelp(context),
   );
 }
 

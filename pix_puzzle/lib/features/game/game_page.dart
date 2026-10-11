@@ -179,18 +179,6 @@ class _GameViewState extends State<_GameView> {
     builder: (context, state) {
       final level = state.level;
       return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: const PixBrand(),
-          actions: [
-            IconButton(
-              tooltip: 'Cómo jugar',
-              icon: const Icon(Icons.help_outline),
-              onPressed: () => showPixHelp(context),
-            ),
-            const SizedBox(width: 8),
-          ],
-        ),
         body: SafeArea(
           child: LayoutBuilder(
             builder: (context, constraints) => SingleChildScrollView(
@@ -198,7 +186,7 @@ class _GameViewState extends State<_GameView> {
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 520),
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
+                    padding: const EdgeInsets.fromLTRB(24, 12, 16, 12),
                     child: LayoutBuilder(
                       builder: (context, inner) {
                         final boardSize = inner.maxWidth;
@@ -209,11 +197,19 @@ class _GameViewState extends State<_GameView> {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
+                            const Row(
+                              children: [
+                                Expanded(child: PixBrand()),
+                                PixHelpButton(),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
                             Text(
                               levelTitle(level),
-                              style: Theme.of(
-                                context,
-                              ).textTheme.displaySmall?.copyWith(fontSize: 36),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displaySmall
+                                  ?.copyWith(fontSize: 36),
                             ),
                             const SizedBox(height: 10),
                             PixLabel(levelDifficulty(level)),

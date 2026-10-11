@@ -1,3 +1,9 @@
-Icono Pix-Puzzle: P de píxeles, crema #FAF7F0, carbón #20252B y foco coral #EF7D68.
+Icono Pix-Puzzle: sello 3×3 con solo el centro relleno (tinta `#20252B`), casillas vacías con borde `#73736F` y fondo crema `#FAF7F0`.
 
-android/, ios/ y web/ reproducen las rutas del proyecto Flutter. Android incluye iconos legacy, adaptativos y monocromáticos. iOS incluye todos los tamaños del catálogo actual, sin transparencia ni esquinas incorporadas. Web incluye PWA, maskable, favicon y Apple Touch. master/ contiene el original editable y store/ el icono de Google Play.
+El mark es el brush del primer toque. Regenerar todos los tamaños:
+
+```bash
+python3 branding/generate_icons.py
+```
+
+`master/` es el original editable. `store/` el icono de Google Play. Android (legacy + adaptativo + monocromo), iOS y web se escriben en las rutas del proyecto Flutter.
