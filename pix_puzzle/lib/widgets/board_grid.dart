@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../data/models/board_cell.dart';
+import '../theme/pix_theme.dart';
 
 /// Black/white grid matching the original BoardView painting.
 class BoardGrid extends StatelessWidget {
@@ -9,15 +10,17 @@ class BoardGrid extends StatelessWidget {
     required this.table,
     this.onCellTap,
     this.size = 120,
+    this.semanticLabel,
   });
 
   final List<List<BoardCell>> table;
   final void Function(int x, int y)? onCellTap;
   final double size;
+  final String? semanticLabel;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    final grid = SizedBox(
       width: size,
       height: size,
       child: GestureDetector(
@@ -40,6 +43,13 @@ class BoardGrid extends StatelessWidget {
         ),
       ),
     );
+
+    if (semanticLabel == null) return grid;
+    return Semantics(
+      label: semanticLabel,
+      button: onCellTap != null,
+      child: grid,
+    );
   }
 }
 
@@ -48,9 +58,9 @@ class _BoardPainter extends CustomPainter {
 
   final List<List<BoardCell>> table;
 
-  static const _black = Color(0xFF000000);
-  static const _white = Color(0xFFFFFFFF);
-  static const _border = Color(0xFF888888);
+  static const _black = PixColors.ink;
+  static const _white = PixColors.cellEmpty;
+  static const _border = PixColors.cellBorder;
 
   @override
   void paint(Canvas canvas, Size size) {

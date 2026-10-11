@@ -4,6 +4,10 @@ Thumbs.db
 *.swp
 *~
 
+# Node (screenshot capture helper)
+**/node_modules/
+pix_puzzle/screenshots/.chrome-profile/
+
 # APK reverse-engineering artifacts (source of truth is the Flutter app)
 apk_extracted/
 decompiled/

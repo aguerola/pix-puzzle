@@ -11,3 +11,4 @@ Flutter stamp/XOR puzzle in `pix_puzzle/`. See root `AGENTS.md` for layout and c
 - `pix_puzzle_v2.apk` is behavioral reference only (Git LFS); do not redistribute or re-encode.
 - Do not publish the package (`publish_to: 'none'`).
 - Run Flutter commands from `pix_puzzle/` (`flutter analyze`, `flutter test` after non-trivial changes).
+- UX skills live in `.agents/skills/` (see `ux-skills.mdc` and `design-system/pix-puzzle/MASTER.md`).

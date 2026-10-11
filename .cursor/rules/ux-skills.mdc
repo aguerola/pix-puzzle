@@ -1,0 +1,23 @@
+---
+description: Use project UX skills when changing Pix-Puzzle visuals or flows
+globs: pix_puzzle/lib/**/*.{dart}
+alwaysApply: false
+---
+
+# UX skills (Pix-Puzzle)
+
+Before non-trivial UI/UX work, read the matching skill under `.agents/skills/` (also linked from `.cursor/skills/`):
+
+| Concern | Skill |
+|---------|--------|
+| Mobile layout, a11y, flows | `mobile-ui-ux-designer` |
+| Palette, type, visual system | `ui-ux-pro-max` |
+| Game HUD, feedback, menus | `game-ui-ux` |
+
+Follow `design-system/pix-puzzle/MASTER.md` (paper + ink). Do not reintroduce neon/dark arcade chrome unless the user asks.
+
+Search helper:
+
+```bash
+python3 .agents/skills/ui-ux-pro-max/scripts/search.py "<query>" --domain ux
+```

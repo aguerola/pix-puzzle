@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../theme/pix_theme.dart';
+
 enum CompleteAction { next, restart, main }
 
 class CompleteDialog extends StatelessWidget {
@@ -15,35 +17,32 @@ class CompleteDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return AlertDialog(
-      title: const Text('         CONGRATULATIONS!!!         '),
-      content: const Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'WELL DONE',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          ),
-          SizedBox(height: 8),
-          Text('LEVEL COMPLETE'),
-        ],
+      title: Text(
+        'Level complete',
+        style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
       ),
-      actionsAlignment: MainAxisAlignment.spaceEvenly,
+      content: Text(
+        'Nice stamp work. What next?',
+        style: textTheme.bodyMedium?.copyWith(color: PixColors.inkMuted),
+      ),
+      actionsAlignment: MainAxisAlignment.spaceBetween,
       actions: [
-        IconButton(
-          tooltip: 'Main',
+        TextButton.icon(
           onPressed: () => Navigator.pop(context, CompleteAction.main),
-          icon: const Icon(Icons.home),
+          icon: const Icon(Icons.home_outlined),
+          label: const Text('Home'),
         ),
-        IconButton(
-          tooltip: 'Restart',
+        TextButton.icon(
           onPressed: () => Navigator.pop(context, CompleteAction.restart),
-          icon: const Icon(Icons.refresh),
+          icon: const Icon(Icons.restart_alt),
+          label: const Text('Restart'),
         ),
-        IconButton(
-          tooltip: 'Next',
+        FilledButton.icon(
           onPressed: () => Navigator.pop(context, CompleteAction.next),
           icon: const Icon(Icons.skip_next),
+          label: const Text('Next'),
         ),
       ],
     );

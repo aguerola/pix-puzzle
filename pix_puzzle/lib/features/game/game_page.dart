@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../data/models/level.dart';
+import '../../theme/pix_theme.dart';
 import '../../widgets/board_grid.dart';
 import '../home/levels_cubit.dart';
 import 'complete_dialog.dart';
@@ -75,11 +76,12 @@ class _GameViewState extends State<_GameView> {
       listener: (context, state) => _handleComplete(context, state),
       builder: (context, state) {
         final level = state.level;
+        final textTheme = Theme.of(context).textTheme;
         return Scaffold(
-          backgroundColor: const Color(0xFFF0F0F0),
           appBar: AppBar(
             title: Text(level.name),
             leading: IconButton(
+              tooltip: 'Back to levels',
               icon: const Icon(Icons.arrow_back),
               onPressed: () =>
                   Navigator.of(context).pop(GameExitAction.refresh),
@@ -101,7 +103,8 @@ class _GameViewState extends State<_GameView> {
                       child: Column(
                         children: [
                           Expanded(
-                            child: Center(
+                            child: _BoardPanel(
+                              label: 'Target',
                               child: BoardGrid(
                                 table: level.tableModel,
                                 size: boardSize,
@@ -110,7 +113,8 @@ class _GameViewState extends State<_GameView> {
                           ),
                           const SizedBox(height: 12),
                           Expanded(
-                            child: Center(
+                            child: _BoardPanel(
+                              label: 'Board',
                               child: BoardGrid(
                                 table: level.tableBoard,
                                 size: boardSize,
@@ -127,10 +131,33 @@ class _GameViewState extends State<_GameView> {
                     ),
                     const SizedBox(width: 12),
                     SizedBox(
-                      width: 56,
+                      width: 64,
                       child: Column(
                         children: [
-                          BoardGrid(table: level.tableBrush, size: 48),
+                          Text(
+                            'Stamp',
+                            style: textTheme.labelMedium?.copyWith(
+                              color: PixColors.inkMuted,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Semantics(
+                            label: 'Stamp brush preview',
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                color: PixColors.raised,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: PixColors.cellBorder),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(6),
+                                child: BoardGrid(
+                                  table: level.tableBrush,
+                                  size: 48,
+                                ),
+                              ),
+                            ),
+                          ),
                           const Spacer(),
                           IconButton(
                             tooltip: 'Undo',
@@ -143,13 +170,14 @@ class _GameViewState extends State<_GameView> {
                             icon: const Icon(Icons.undo),
                           ),
                           IconButton(
-                            tooltip: 'Reset',
+                            tooltip: 'Reset board',
+                            color: PixColors.reset,
                             onPressed: state.isComplete
                                 ? null
                                 : () => context
                                     .read<GameBloc>()
                                     .add(const ResetPressed()),
-                            icon: const Icon(Icons.delete_outline),
+                            icon: const Icon(Icons.restart_alt),
                           ),
                         ],
                       ),
@@ -161,6 +189,54 @@ class _GameViewState extends State<_GameView> {
           ),
         );
       },
+    );
+  }
+}
+
+class _BoardPanel extends StatelessWidget {
+  const _BoardPanel({required this.label, required this.child});
+
+  final String label;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            label,
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  color: PixColors.inkMuted,
+                  fontWeight: FontWeight.w600,
+                ),
+          ),
+        ),
+        const SizedBox(height: 6),
+        Expanded(
+          child: Center(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: PixColors.raised,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: PixColors.cellBorder),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x14000000),
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: child,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

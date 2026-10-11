@@ -53,6 +53,23 @@ Core puzzle rule: tapping a cell toggles `selected` and runs `Level.recalcFills(
 - Do not commit secrets. Treat `pix_puzzle_v2.apk` as binary reference; prefer Git LFS, not re-encoding.
 - When changing stamp/XOR or level JSON shape, add or update tests in `test/level_logic_test.dart`.
 
+## Skills de UI (proyecto)
+
+Instalados en `.agents/skills/` (espejo en `.cursor/skills/`; ver `skills-lock.json`):
+
+| Skill | Usar cuando |
+|-------|-------------|
+| `mobile-ui-ux-designer` | Layout/UX móvil, flujos, a11y, handoff |
+| `ui-ux-pro-max` | Estética, design system, paletas, tipografía |
+| `game-ui-ux` | HUD, menús, feedback visual, UI de juego |
+
+Antes de cambios visuales no triviales: leer la skill relevante y, si existe, `design-system/pix-puzzle/MASTER.md`. Búsqueda de patrones:
+
+```bash
+python3 .agents/skills/ui-ux-pro-max/scripts/search.py "<query>" --domain ux
+python3 .agents/skills/ui-ux-pro-max/scripts/search.py "puzzle pixel game" --design-system -p "Pix-Puzzle"
+```
+
 ## Out of scope for agents
 
 - Do not reverse-engineer or redistribute the APK beyond reading it as a behavioral reference for this port.
