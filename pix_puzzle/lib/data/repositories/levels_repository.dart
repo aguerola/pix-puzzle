@@ -59,6 +59,17 @@ class LevelsRepository {
     return group[index + 1];
   }
 
+  /// Whether every level in [current]'s difficulty group is marked done.
+  bool isDifficultyComplete(Level current) {
+    final group = levelsForDifficulty(_prefixOf(current.name));
+    return group.isNotEmpty && group.every((level) => level.done);
+  }
+
+  bool get hasLoadedLevels {
+    final levels = _levels;
+    return levels != null && levels.isNotEmpty;
+  }
+
   Future<void> markDone(int code) async {
     final levels = await loadLevels();
     _levels = [

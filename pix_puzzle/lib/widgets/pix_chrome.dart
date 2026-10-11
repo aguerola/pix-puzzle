@@ -3,18 +3,28 @@ import '../data/models/level.dart';
 import '../theme/pix_theme.dart';
 
 String levelNumber(Level level) =>
-    int.tryParse(
-      level.name.split('_').elementAtOrNull(1) ?? '',
-    )?.toString().padLeft(2, '0') ??
+    int.tryParse(level.name.split('_').elementAtOrNull(1) ?? '')?.toString() ??
     '—';
-String levelTitle(Level level) {
+
+/// Meaningful display title from the name suffix, or null if none.
+String? levelMeaningfulTitle(Level level) {
   final suffix = level.name.split('_').skip(2).join(' ').trim();
-  if (suffix.isEmpty || suffix.contains('name')) {
-    return 'Nivel ${levelNumber(level)}';
-  }
+  if (suffix.isEmpty || suffix.contains('name')) return null;
   if (suffix == 'super facil') return 'Primeros pasos';
   return '${suffix[0].toUpperCase()}${suffix.substring(1)}';
 }
+
+/// Visible headline: `Nivel 1 · Primeros pasos` or `Nivel 2`.
+String levelTitle(Level level) {
+  final number = levelNumber(level);
+  final meaningful = levelMeaningfulTitle(level);
+  if (meaningful == null) return 'Nivel $number';
+  return 'Nivel $number · $meaningful';
+}
+
+/// Short label for CTAs (e.g. "primeros pasos", "nivel 2").
+String levelPlayLabel(Level level) =>
+    (levelMeaningfulTitle(level) ?? 'nivel ${levelNumber(level)}').toLowerCase();
 
 String levelDifficulty(Level level) => switch (level.name.split('_').first) {
   '1' => 'Fácil',

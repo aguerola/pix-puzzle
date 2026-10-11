@@ -42,18 +42,21 @@ class HomePage extends StatelessWidget {
                 return const Center(child: CircularProgressIndicator());
               }
               if (state is LevelsError) {
+                final canRetry = state.message == LevelsCubit.loadFailedMessage;
                 return Center(
                   child: Padding(
                     padding: const EdgeInsets.all(24),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Text('No pudimos cargar los niveles.'),
-                        const SizedBox(height: 16),
-                        FilledButton(
-                          onPressed: () => context.read<LevelsCubit>().load(),
-                          child: const Text('Reintentar'),
-                        ),
+                        Text(state.message, textAlign: TextAlign.center),
+                        if (canRetry) ...[
+                          const SizedBox(height: 16),
+                          FilledButton(
+                            onPressed: () => context.read<LevelsCubit>().load(),
+                            child: const Text('Reintentar'),
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -106,9 +109,7 @@ class HomePage extends StatelessWidget {
                               child: FilledButton.icon(
                                 onPressed: () => _open(context, next),
                                 icon: const Icon(Icons.arrow_forward),
-                                label: Text(
-                                  'Jugar ${levelTitle(next).toLowerCase()}',
-                                ),
+                                label: Text('Jugar ${levelPlayLabel(next)}'),
                               ),
                             ),
                           if (loaded.levels.isEmpty)

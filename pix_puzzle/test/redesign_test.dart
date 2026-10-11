@@ -61,7 +61,7 @@ void main() {
       }
       await tester.tap(find.text('Jugar primeros pasos'));
       await tester.pumpAndSettle();
-      expect(find.text('Primeros pasos'), findsOneWidget);
+      expect(find.text('Nivel 1 · Primeros pasos'), findsOneWidget);
       expect(tester.takeException(), isNull);
       await tester.ensureVisible(find.text('Reiniciar'));
       expect(tester.takeException(), isNull);
