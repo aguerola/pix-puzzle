@@ -31,7 +31,7 @@ class _GameView extends StatefulWidget {
 
 class _GameViewState extends State<_GameView> {
   bool _dialogOpen = false;
-  static const completeRevealDelay = Duration(milliseconds: 2000);
+  static const completeRevealDelay = Duration(milliseconds: 700);
 
   Future<void> _handleComplete(BuildContext context, GameState state) async {
     if (_dialogOpen || !state.showCompleteDialog) return;
