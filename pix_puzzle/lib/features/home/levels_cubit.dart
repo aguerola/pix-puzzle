@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../data/models/level.dart';
@@ -46,6 +47,9 @@ class LevelsError extends LevelsState {
 class LevelsCubit extends Cubit<LevelsState> {
   LevelsCubit(this._repository) : super(const LevelsLoading());
 
+  static const loadFailedMessage = 'No pudimos cargar los niveles.';
+  static const emptyCatalogMessage = 'No hay niveles disponibles.';
+
   final LevelsRepository _repository;
   Difficulty _difficulty = Difficulty.easy;
 
@@ -53,9 +57,14 @@ class LevelsCubit extends Cubit<LevelsState> {
     emit(const LevelsLoading());
     try {
       await _repository.loadLevels();
+      if (!_repository.hasLoadedLevels) {
+        emit(const LevelsError(emptyCatalogMessage));
+        return;
+      }
       _emitLoaded();
-    } catch (e) {
-      emit(LevelsError(e.toString()));
+    } catch (e, st) {
+      debugPrint('LevelsCubit.load failed: $e\n$st');
+      emit(const LevelsError(loadFailedMessage));
     }
   }
 
@@ -70,6 +79,9 @@ class LevelsCubit extends Cubit<LevelsState> {
   }
 
   Level? nextLevel(Level current) => _repository.nextLevel(current);
+
+  bool isDifficultyComplete(Level current) =>
+      _repository.isDifficultyComplete(current);
 
   void _emitLoaded() {
     emit(

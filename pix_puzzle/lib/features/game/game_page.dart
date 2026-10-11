@@ -31,10 +31,18 @@ class _GameView extends StatefulWidget {
 
 class _GameViewState extends State<_GameView> {
   bool _dialogOpen = false;
+  static const completeRevealDelay = Duration(milliseconds: 700);
+
   Future<void> _handleComplete(BuildContext context, GameState state) async {
     if (_dialogOpen || !state.showCompleteDialog) return;
     _dialogOpen = true;
     try {
+      final delay = MediaQuery.disableAnimationsOf(context)
+          ? Duration.zero
+          : completeRevealDelay;
+      await Future<void>.delayed(delay);
+      if (!context.mounted) return;
+
       try {
         await widget.levelsCubit.markDone(state.level.code);
       } catch (_) {
@@ -50,7 +58,14 @@ class _GameViewState extends State<_GameView> {
       }
       if (!context.mounted) return;
       final next = widget.levelsCubit.nextLevel(state.level);
-      final action = await CompleteDialog.show(context, hasNext: next != null);
+      final difficultyComplete =
+          next == null && widget.levelsCubit.isDifficultyComplete(state.level);
+      final action = await CompleteDialog.show(
+        context,
+        hasNext: next != null,
+        difficultyComplete: difficultyComplete,
+        difficultyLabel: levelDifficulty(state.level),
+      );
       if (!context.mounted) return;
       context.read<GameBloc>().add(const CompleteAcknowledged());
       switch (action) {
@@ -203,9 +218,7 @@ class _GameViewState extends State<_GameView> {
                               ).textTheme.displaySmall?.copyWith(fontSize: 36),
                             ),
                             const SizedBox(height: 10),
-                            PixLabel(
-                              'Nivel ${levelNumber(level)} / ${levelDifficulty(level)}',
-                            ),
+                            PixLabel(levelDifficulty(level)),
                             const SizedBox(height: 16),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
