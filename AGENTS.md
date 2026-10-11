@@ -11,6 +11,8 @@ Stamp/XOR grid puzzle game, ported from Android to Flutter (iOS, Android, web) w
 | `pix_puzzle/assets/levels.json` | Level definitions |
 | `pix_puzzle/test/` | Unit / widget tests |
 | `pix_puzzle_v2.apk` | Original Android APK (Git LFS) — reference only |
+| `firebase.json` / `.firebaserc` | Firebase Hosting target `pix-puzzle` → `{project}-pix-puzzle.web.app` |
+| `.github/workflows/deploy-web.yml` | Deploy Flutter web to Guerolabs Hosting (dev + prod) via WIF |
 
 App entry: `pix_puzzle/lib/main.dart` → `PixPuzzleApp`.
 

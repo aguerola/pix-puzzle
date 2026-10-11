@@ -1,0 +1,23 @@
+{
+  "projects": {
+    "default": "guerolabs-dev",
+    "development": "guerolabs-dev",
+    "production": "guerolabs"
+  },
+  "targets": {
+    "guerolabs-dev": {
+      "hosting": {
+        "pix-puzzle": [
+          "guerolabs-dev-pix-puzzle"
+        ]
+      }
+    },
+    "guerolabs": {
+      "hosting": {
+        "pix-puzzle": [
+          "guerolabs-pix-puzzle"
+        ]
+      }
+    }
+  }
+}
