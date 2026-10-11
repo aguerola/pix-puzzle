@@ -37,10 +37,8 @@ class _GameViewState extends State<_GameView> {
     if (_dialogOpen || !state.showCompleteDialog) return;
     _dialogOpen = true;
     try {
-      final delay = MediaQuery.disableAnimationsOf(context)
-          ? Duration.zero
-          : completeRevealDelay;
-      await Future<void>.delayed(delay);
+      // Always pause so the last stamp is visible before the dialog.
+      await Future<void>.delayed(completeRevealDelay);
       if (!context.mounted) return;
 
       try {
