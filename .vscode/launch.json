@@ -1,0 +1,29 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "pix_puzzle (debug)",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "pix_puzzle",
+      "program": "lib/main.dart",
+      "flutterMode": "debug"
+    },
+    {
+      "name": "pix_puzzle (profile)",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "pix_puzzle",
+      "program": "lib/main.dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "pix_puzzle (release)",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "pix_puzzle",
+      "program": "lib/main.dart",
+      "flutterMode": "release"
+    }
+  ]
+}

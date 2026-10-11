@@ -1,0 +1,5 @@
+package es.amg.pix_puzzle
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity : FlutterActivity()
