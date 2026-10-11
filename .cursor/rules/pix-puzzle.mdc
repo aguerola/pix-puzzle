@@ -1,0 +1,13 @@
+---
+description: Pix-Puzzle project context and boundaries
+alwaysApply: true
+---
+
+# Pix-Puzzle
+
+Flutter stamp/XOR puzzle in `pix_puzzle/`. See root `AGENTS.md` for layout and commands.
+
+- Source of truth: `pix_puzzle/lib/`. Levels: `pix_puzzle/assets/levels.json`.
+- `pix_puzzle_v2.apk` is behavioral reference only (Git LFS); do not redistribute or re-encode.
+- Do not publish the package (`publish_to: 'none'`).
+- Run Flutter commands from `pix_puzzle/` (`flutter analyze`, `flutter test` after non-trivial changes).

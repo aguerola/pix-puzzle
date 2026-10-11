@@ -1,0 +1,42 @@
+---
+description: Flutter / dart / bloc conventions for pix_puzzle
+globs: pix_puzzle/**/*.dart
+alwaysApply: false
+---
+
+# Flutter & bloc
+
+## Structure
+
+Feature-first under `lib/`:
+
+- `data/models/`, `data/repositories/`
+- `features/<feature>/` (pages + Cubit/Bloc)
+- `widgets/` for shared UI
+
+Keep game rules in models (`Level`), not in widgets.
+
+## State
+
+- Cubit for simple load/list; Bloc + sealed events for gameplay.
+- Events and states extend `Equatable`; use immutable `copyWith` / deep clones for boards.
+
+```dart
+// ✅ GOOD — sealed event, Equatable props
+sealed class GameEvent extends Equatable {
+  const GameEvent();
+  @override
+  List<Object?> get props => [];
+}
+```
+
+## Board coordinates
+
+Indices are `[x][y]` (column, row), matching the Android original. Never flip axes when porting or editing levels.
+
+Tap → toggle `selected` → `Level.recalcFills()` (XOR 3×3 brush). Done when board fills match `tableModel`.
+
+## Tests & lints
+
+- Stamp/XOR or level JSON changes → update `test/level_logic_test.dart`.
+- Follow `flutter_lints`; prefer small, colocated feature files.
