@@ -186,7 +186,7 @@ class _GameViewState extends State<_GameView> {
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 520),
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 12, 16, 12),
+                    padding: const EdgeInsets.fromLTRB(20, 12, 16, 12),
                     child: LayoutBuilder(
                       builder: (context, inner) {
                         final boardSize = inner.maxWidth;
@@ -197,10 +197,19 @@ class _GameViewState extends State<_GameView> {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            const Row(
+                            Row(
                               children: [
-                                Expanded(child: PixBrand()),
-                                PixHelpButton(),
+                                Expanded(
+                                  child: PixBrand(
+                                    mark: pixBackStamp,
+                                    tooltip: 'Niveles',
+                                    onPressed: () => Navigator.pop(
+                                      context,
+                                      GameExitAction.refresh,
+                                    ),
+                                  ),
+                                ),
+                                const PixHelpButton(),
                               ],
                             ),
                             const SizedBox(height: 16),

@@ -39,30 +39,70 @@ final List<List<BoardCell>> pixBrandStamp = List.generate(
   (x) => List.generate(3, (y) => BoardCell(fill: x == 1 && y == 1)),
 );
 
-/// Stamp [BoardGrid] + wordmark.
+/// Left chevron in a 3×3 stamp grid:
+/// · ■ ·
+/// ■ · ·
+/// · ■ ·
+final List<List<BoardCell>> pixBackStamp = List.generate(
+  3,
+  (x) => List.generate(
+    3,
+    (y) => BoardCell(
+      fill: (x == 1 && y == 0) || (x == 0 && y == 1) || (x == 1 && y == 2),
+    ),
+  ),
+);
+
+/// Stamp [BoardGrid] + wordmark. Optional [onPressed] (e.g. back on game).
 class PixBrand extends StatelessWidget {
-  const PixBrand({super.key});
+  const PixBrand({
+    super.key,
+    this.mark,
+    this.onPressed,
+    this.tooltip,
+  });
+
+  /// Defaults to [pixBrandStamp]; use [pixBackStamp] for a back control.
+  final List<List<BoardCell>>? mark;
+  final VoidCallback? onPressed;
+  final String? tooltip;
+
   @override
-  Widget build(BuildContext context) => Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      ExcludeSemantics(
-        child: BoardGrid(table: pixBrandStamp, size: 28),
-      ),
-      const SizedBox(width: 10),
-      const Flexible(
-        child: Text(
-          'pix puzzle',
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.w700,
-            letterSpacing: -.6,
+  Widget build(BuildContext context) {
+    final row = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ExcludeSemantics(
+          child: BoardGrid(table: mark ?? pixBrandStamp, size: 28),
+        ),
+        const SizedBox(width: 10),
+        const Flexible(
+          child: Text(
+            'pix puzzle',
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w700,
+              letterSpacing: -.6,
+            ),
           ),
         ),
+      ],
+    );
+    if (onPressed == null) return row;
+    return Semantics(
+      button: true,
+      label: tooltip ?? 'Volver',
+      child: InkWell(
+        onTap: onPressed,
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+          child: row,
+        ),
       ),
-    ],
-  );
+    );
+  }
 }
 
 class PixLabel extends StatelessWidget {

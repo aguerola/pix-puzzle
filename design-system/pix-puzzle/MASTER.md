@@ -101,7 +101,7 @@
 User approved the mobile concept on 2026-10-11. Warm paper, charcoal grids, large editorial headings, coral focus (`PixColors.focus` = `#EF7D68`) and dark coral actions. White text on filled actions remains `#FFFFFF`. No gradients, illustrations or raster assets required.
 
 - Mobile catalogue: difficulty chips above full-width list; meaningful display titles without changing stored IDs; completion count and first pending level.
-- Brand mark: center-only stamp rendered with `BoardGrid` (same widget as the in-game sello). Home and game: mark + “pix puzzle” with help on one row; hero / level title below (no AppBar).
+- Brand mark: `BoardGrid` stamp + “pix puzzle”. Home: center-dot mark. Game: 3×3 pixel back-arrow mark (tappable → pop to levels) + help; level title below (no AppBar).
 - Tap commits on release; each cell exposes a native button and row/column state. Last move receives a coral inset ring.
 - Boards larger than 7×7 offer a fullscreen pan/zoom view with at least 48px cells at base scale; drag does not stamp.
 - Reset requires confirmation after moves. Completion offers a correctly labeled final-level action.
