@@ -73,9 +73,9 @@ class PixBrand extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         ExcludeSemantics(
-          child: BoardGrid(table: mark ?? pixBrandStamp, size: 28),
+          child: BoardGrid(table: mark ?? pixBrandStamp, size: 24),
         ),
-        const SizedBox(width: 10),
+        const SizedBox(width: 8),
         const Flexible(
           child: Text(
             'pix puzzle',
