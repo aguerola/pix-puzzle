@@ -76,6 +76,9 @@ decompiled/
 # Web build
 **/web/.dart_tool/
 
+# Generated level shape previews (scripts/preview_levels.py)
+level-previews/
+
 # Misc logs
 *.log
 *.class

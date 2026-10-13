@@ -3,33 +3,23 @@ import '../data/models/board_cell.dart';
 import '../data/models/level.dart';
 import 'board_grid.dart';
 
-String levelNumber(Level level) =>
-    int.tryParse(level.name.split('_').elementAtOrNull(1) ?? '')?.toString() ??
-    '—';
+String levelNumber(Level level) => level.number.toString();
 
-/// Meaningful display title from the name suffix, or null if none.
-String? levelMeaningfulTitle(Level level) {
-  final suffix = level.name.split('_').skip(2).join(' ').trim();
-  if (suffix.isEmpty || suffix.contains('name')) return null;
-  if (suffix == 'super facil') return 'Primeros pasos';
-  return '${suffix[0].toUpperCase()}${suffix.substring(1)}';
-}
-
-/// Visible headline: `Nivel 1 · Primeros pasos` or `Nivel 2`.
+/// Visible headline: `Nivel 2 · Pajarita`, or `Nivel 2` when [Level.title] is empty.
 String levelTitle(Level level) {
   final number = levelNumber(level);
-  final meaningful = levelMeaningfulTitle(level);
-  if (meaningful == null) return 'Nivel $number';
-  return 'Nivel $number · $meaningful';
+  if (level.title.isEmpty) return 'Nivel $number';
+  return 'Nivel $number · ${level.title}';
 }
 
-/// Short label for CTAs (e.g. "primeros pasos", "nivel 2").
-String levelPlayLabel(Level level) =>
-    (levelMeaningfulTitle(level) ?? 'nivel ${levelNumber(level)}').toLowerCase();
+/// Short label for CTAs (e.g. "pajarita", "nivel 2").
+String levelPlayLabel(Level level) => level.title.isEmpty
+    ? 'nivel ${levelNumber(level)}'
+    : level.title.toLowerCase();
 
-String levelDifficulty(Level level) => switch (level.name.split('_').first) {
-  '1' => 'Fácil',
-  '2' => 'Media',
+String levelDifficulty(Level level) => switch (level.difficulty) {
+  1 => 'Fácil',
+  2 => 'Media',
   _ => 'Difícil',
 };
 
@@ -55,12 +45,7 @@ final List<List<BoardCell>> pixBackStamp = List.generate(
 
 /// Stamp [BoardGrid] + wordmark. Optional [onPressed] (e.g. back on game).
 class PixBrand extends StatelessWidget {
-  const PixBrand({
-    super.key,
-    this.mark,
-    this.onPressed,
-    this.tooltip,
-  });
+  const PixBrand({super.key, this.mark, this.onPressed, this.tooltip});
 
   /// Defaults to [pixBrandStamp]; use [pixBackStamp] for a back control.
   final List<List<BoardCell>>? mark;

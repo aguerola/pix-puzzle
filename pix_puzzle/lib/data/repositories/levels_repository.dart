@@ -28,17 +28,24 @@ class LevelsRepository {
         .toList();
 
     final doneCodes = await _loadDoneCodes();
-    _levels = list
-        .map((level) => level.copyWith(done: doneCodes.contains(level.code)))
-        .toList()
-      ..sort((a, b) => a.name.compareTo(b.name));
+    _levels =
+        list
+            .map(
+              (level) => level.copyWith(done: doneCodes.contains(level.code)),
+            )
+            .toList()
+          ..sort((a, b) {
+            final byDifficulty = a.difficulty.compareTo(b.difficulty);
+            if (byDifficulty != 0) return byDifficulty;
+            return a.number.compareTo(b.number);
+          });
     return _levels!;
   }
 
-  List<Level> levelsForDifficulty(String prefix) {
+  List<Level> levelsForDifficulty(int difficulty) {
     final levels = _levels;
     if (levels == null) return const [];
-    return levels.where((l) => l.name.startsWith(prefix)).toList();
+    return levels.where((l) => l.difficulty == difficulty).toList();
   }
 
   Level? levelByCode(int code) {
@@ -50,10 +57,9 @@ class LevelsRepository {
     return null;
   }
 
-  /// Next level in the same difficulty (name prefix), after [current], or null.
+  /// Next level in the same difficulty, after [current], or null.
   Level? nextLevel(Level current) {
-    final prefix = _prefixOf(current.name);
-    final group = levelsForDifficulty(prefix);
+    final group = levelsForDifficulty(current.difficulty);
     final index = group.indexWhere((l) => l.code == current.code);
     if (index < 0 || index + 1 >= group.length) return null;
     return group[index + 1];
@@ -61,7 +67,7 @@ class LevelsRepository {
 
   /// Whether every level in [current]'s difficulty group is marked done.
   bool isDifficultyComplete(Level current) {
-    final group = levelsForDifficulty(_prefixOf(current.name));
+    final group = levelsForDifficulty(current.difficulty);
     return group.isNotEmpty && group.every((level) => level.done);
   }
 
@@ -87,10 +93,5 @@ class LevelsRepository {
     if (raw == null || raw.isEmpty) return {};
     final list = jsonDecode(raw) as List<dynamic>;
     return list.map((e) => e as int).toSet();
-  }
-
-  static String _prefixOf(String name) {
-    final match = RegExp(r'^(\d+_)').firstMatch(name);
-    return match?.group(1) ?? name;
   }
 }

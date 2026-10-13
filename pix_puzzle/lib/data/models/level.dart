@@ -7,7 +7,9 @@ class Level extends Equatable {
   const Level({
     required this.code,
     required this.size,
-    required this.name,
+    required this.difficulty,
+    required this.number,
+    required this.title,
     required this.tableBoard,
     required this.tableModel,
     required this.tableBrush,
@@ -16,7 +18,15 @@ class Level extends Equatable {
 
   final int code;
   final int size;
-  final String name;
+
+  /// 1 fácil, 2 media, 3 difícil.
+  final int difficulty;
+
+  /// Order within [difficulty]. Unique in that group.
+  final int number;
+
+  /// Visible name, already capitalized. Empty when the level has none.
+  final String title;
   final List<List<BoardCell>> tableBoard;
   final List<List<BoardCell>> tableModel;
   final List<List<BoardCell>> tableBrush;
@@ -25,7 +35,9 @@ class Level extends Equatable {
   Level copyWith({
     int? code,
     int? size,
-    String? name,
+    int? difficulty,
+    int? number,
+    String? title,
     List<List<BoardCell>>? tableBoard,
     List<List<BoardCell>>? tableModel,
     List<List<BoardCell>>? tableBrush,
@@ -34,7 +46,9 @@ class Level extends Equatable {
     return Level(
       code: code ?? this.code,
       size: size ?? this.size,
-      name: name ?? this.name,
+      difficulty: difficulty ?? this.difficulty,
+      number: number ?? this.number,
+      title: title ?? this.title,
       tableBoard: tableBoard ?? this.tableBoard,
       tableModel: tableModel ?? this.tableModel,
       tableBrush: tableBrush ?? this.tableBrush,
@@ -46,7 +60,9 @@ class Level extends Equatable {
     return Level(
       code: json['code'] as int,
       size: json['size'] as int,
-      name: json['name'] as String,
+      difficulty: json['difficulty'] as int,
+      number: json['number'] as int,
+      title: json['title'] as String,
       tableBoard: _tableFromJson(json['tableBoard']),
       tableModel: _tableFromJson(json['tableModel']),
       tableBrush: _tableFromJson(json['tableBrush']),
@@ -55,14 +71,16 @@ class Level extends Equatable {
   }
 
   Map<String, dynamic> toJson() => {
-        'code': code,
-        'size': size,
-        'name': name,
-        'tableBoard': _tableToJson(tableBoard),
-        'tableModel': _tableToJson(tableModel),
-        'tableBrush': _tableToJson(tableBrush),
-        'done': done,
-      };
+    'code': code,
+    'size': size,
+    'difficulty': difficulty,
+    'number': number,
+    'title': title,
+    'tableBoard': _tableToJson(tableBoard),
+    'tableModel': _tableToJson(tableModel),
+    'tableBrush': _tableToJson(tableBrush),
+    'done': done,
+  };
 
   static List<List<BoardCell>> _tableFromJson(dynamic raw) {
     final outer = raw as List<dynamic>;
@@ -174,6 +192,15 @@ class Level extends Equatable {
   }
 
   @override
-  List<Object?> get props =>
-      [code, size, name, tableBoard, tableModel, tableBrush, done];
+  List<Object?> get props => [
+    code,
+    size,
+    difficulty,
+    number,
+    title,
+    tableBoard,
+    tableModel,
+    tableBrush,
+    done,
+  ];
 }

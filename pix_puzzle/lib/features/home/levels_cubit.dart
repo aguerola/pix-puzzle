@@ -6,12 +6,12 @@ import '../../data/models/level.dart';
 import '../../data/repositories/levels_repository.dart';
 
 enum Difficulty {
-  easy('1_', 'Fácil'),
-  medium('2_', 'Media'),
-  hard('3_', 'Difícil');
+  easy(1, 'Fácil'),
+  medium(2, 'Media'),
+  hard(3, 'Difícil');
 
-  const Difficulty(this.prefix, this.label);
-  final String prefix;
+  const Difficulty(this.id, this.label);
+  final int id;
   final String label;
 }
 
@@ -87,7 +87,7 @@ class LevelsCubit extends Cubit<LevelsState> {
     emit(
       LevelsLoaded(
         difficulty: _difficulty,
-        levels: _repository.levelsForDifficulty(_difficulty.prefix),
+        levels: _repository.levelsForDifficulty(_difficulty.id),
       ),
     );
   }
