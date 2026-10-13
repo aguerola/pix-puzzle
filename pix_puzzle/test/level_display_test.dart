@@ -22,13 +22,13 @@ void main() {
   test('levelNumber drops internal zero padding', () {
     expect(levelNumber(_level('1_001_super_facil')), '1');
     expect(levelNumber(_level('1_002')), '2');
-    expect(levelNumber(_level('3_019_name')), '19');
+    expect(levelNumber(_level('3_020_name')), '20');
   });
 
   test('levelTitle hides technical suffixes and keeps meaningful names', () {
     expect(levelTitle(_level('1_001_super_facil')), 'Nivel 1 · Primeros pasos');
     expect(levelTitle(_level('1_002')), 'Nivel 2');
-    expect(levelTitle(_level('3_019_name')), 'Nivel 19');
+    expect(levelTitle(_level('3_020_name')), 'Nivel 20');
     expect(levelTitle(_level('1_005_ajedrez')), 'Nivel 5 · Ajedrez');
     expect(levelMeaningfulTitle(_level('1_007_name')), isNull);
     expect(levelPlayLabel(_level('1_001_super_facil')), 'primeros pasos');
