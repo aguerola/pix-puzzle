@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pix_puzzle/app.dart';
 import 'package:pix_puzzle/data/models/board_cell.dart';
 import 'package:pix_puzzle/data/repositories/levels_repository.dart';
+import 'package:pix_puzzle/l10n/app_localizations.dart';
 import 'package:pix_puzzle/widgets/board_grid.dart';
 
 void main() {
@@ -13,6 +14,9 @@ void main() {
       final taps = <(int, int)>[];
       await tester.pumpWidget(
         MaterialApp(
+          locale: const Locale('es'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
             body: BoardGrid(
               size: 240,
@@ -48,20 +52,22 @@ void main() {
       SharedPreferences.setMockInitialValues({});
       final repository = LevelsRepository();
       await tester.runAsync(() => repository.loadLevels());
-      await tester.pumpWidget(PixPuzzleApp(repository: repository));
+      await tester.pumpWidget(
+        PixPuzzleApp(repository: repository, locale: const Locale('es')),
+      );
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
       for (
         var i = 0;
-        i < 8 && tester.getCenter(find.text('Jugar primeros pasos')).dy > 650;
+        i < 8 && tester.getCenter(find.text('Jugar diamante')).dy > 650;
         i++
       ) {
         await tester.drag(find.byType(CustomScrollView), const Offset(0, -250));
         await tester.pumpAndSettle();
       }
-      await tester.tap(find.text('Jugar primeros pasos'));
+      await tester.tap(find.text('Jugar diamante'));
       await tester.pumpAndSettle();
-      expect(find.text('Nivel 1 · Primeros pasos'), findsOneWidget);
+      expect(find.text('Nivel 1 · Diamante'), findsOneWidget);
       expect(tester.takeException(), isNull);
       await tester.ensureVisible(find.text('Reiniciar'));
       expect(tester.takeException(), isNull);

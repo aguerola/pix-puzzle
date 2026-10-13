@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pix_puzzle/features/game/complete_dialog.dart';
+import 'package:pix_puzzle/l10n/app_localizations.dart';
 
 void main() {
   Future<void> pumpDialog(
@@ -10,6 +11,9 @@ void main() {
   }) async {
     await tester.pumpWidget(
       MaterialApp(
+        locale: const Locale('es'),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(
           body: Builder(
             builder: (context) => TextButton(
@@ -38,11 +42,15 @@ void main() {
     expect(find.text('Repetir'), findsOneWidget);
   });
 
-  testWidgets('last level with pending keeps fin-de-grupo copy', (tester) async {
+  testWidgets('last level with pending keeps fin-de-grupo copy', (
+    tester,
+  ) async {
     await pumpDialog(tester, hasNext: false, difficultyComplete: false);
     expect(find.text('¡Nivel completado!'), findsOneWidget);
     expect(
-      find.text('Has llegado al final del grupo. Aún quedan niveles pendientes.'),
+      find.text(
+        'Has llegado al final del grupo. Aún quedan niveles pendientes.',
+      ),
       findsOneWidget,
     );
     expect(find.text('Volver a niveles'), findsOneWidget);

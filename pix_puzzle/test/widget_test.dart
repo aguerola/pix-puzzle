@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pix_puzzle/widgets/board_grid.dart';
 import 'package:pix_puzzle/data/models/board_cell.dart';
+import 'package:pix_puzzle/l10n/app_localizations.dart';
+import 'package:pix_puzzle/widgets/board_grid.dart';
 
 void main() {
   testWidgets('BoardGrid paints and reports taps', (tester) async {
@@ -13,6 +14,9 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
+        locale: const Locale('es'),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(
           body: Center(
             child: BoardGrid(

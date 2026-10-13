@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/models/level.dart';
+import '../../l10n/app_localizations.dart';
 import '../../theme/pix_theme.dart';
 import '../../widgets/board_grid.dart';
 import '../../widgets/pix_chrome.dart';
@@ -31,19 +32,24 @@ class HomePage extends StatelessWidget {
                 return const Center(child: CircularProgressIndicator());
               }
               if (state is LevelsError) {
-                final canRetry = state.message == LevelsCubit.loadFailedMessage;
+                final l10n = AppLocalizations.of(context);
+                final canRetry = state.failure == LevelsFailure.loadFailed;
+                final message = switch (state.failure) {
+                  LevelsFailure.loadFailed => l10n.loadFailed,
+                  LevelsFailure.emptyCatalog => l10n.emptyCatalog,
+                };
                 return Center(
                   child: Padding(
                     padding: const EdgeInsets.all(24),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(state.message, textAlign: TextAlign.center),
+                        Text(message, textAlign: TextAlign.center),
                         if (canRetry) ...[
                           const SizedBox(height: 16),
                           FilledButton(
                             onPressed: () => context.read<LevelsCubit>().load(),
-                            child: const Text('Reintentar'),
+                            child: Text(l10n.retry),
                           ),
                         ],
                       ],
@@ -51,6 +57,8 @@ class HomePage extends StatelessWidget {
                   ),
                 );
               }
+              final l10n = AppLocalizations.of(context);
+              final languageCode = levelLanguage(context);
               final loaded = state as LevelsLoaded;
               final done = loaded.levels.where((l) => l.done).length;
               final next = loaded.levels.where((l) => !l.done).firstOrNull;
@@ -72,16 +80,14 @@ class HomePage extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(right: 12),
                             child: Text(
-                              'Un toque.\nOtro patrón.',
+                              l10n.tagline,
                               style: Theme.of(context).textTheme.displaySmall,
                             ),
                           ),
                           const SizedBox(height: 12),
-                          const Padding(
-                            padding: EdgeInsets.only(right: 12),
-                            child: Text(
-                              'Elige un reto y encuentra su equilibrio.',
-                            ),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 12),
+                            child: Text(l10n.subtitle),
                           ),
                           const SizedBox(height: 24),
                           Padding(
@@ -92,7 +98,12 @@ class HomePage extends StatelessWidget {
                               children: [
                                 for (final d in Difficulty.values)
                                   ChoiceChip(
-                                    label: Text(d.label),
+                                    label: Text(switch (d) {
+                                      Difficulty.easy => l10n.difficultyEasy,
+                                      Difficulty.medium =>
+                                        l10n.difficultyMedium,
+                                      Difficulty.hard => l10n.difficultyHard,
+                                    }),
                                     selected: loaded.difficulty == d,
                                     showCheckmark: true,
                                     onSelected: (_) => context
@@ -106,7 +117,7 @@ class HomePage extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(right: 12),
                             child: Text(
-                              '$done de ${loaded.levels.length} completados',
+                              l10n.completedCount(done, loaded.levels.length),
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ),
@@ -119,21 +130,23 @@ class HomePage extends StatelessWidget {
                                 child: FilledButton.icon(
                                   onPressed: () => _open(context, next),
                                   icon: const Icon(Icons.arrow_forward),
-                                  label: Text('Jugar ${levelPlayLabel(next)}'),
+                                  label: Text(
+                                    l10n.playLevel(
+                                      levelPlayLabel(l10n, next, languageCode),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
                           if (loaded.levels.isEmpty)
-                            const Padding(
-                              padding: EdgeInsets.only(right: 12),
-                              child: Text(
-                                'No hay niveles en esta dificultad. Prueba otra.',
-                              ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 12),
+                              child: Text(l10n.noLevelsInDifficulty),
                             ),
                           const SizedBox(height: 20),
-                          const Padding(
-                            padding: EdgeInsets.only(right: 12),
-                            child: PixLabel('Tus retos'),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 12),
+                            child: PixLabel(l10n.yourChallenges),
                           ),
                         ],
                       ),
@@ -158,8 +171,9 @@ class HomePage extends StatelessWidget {
                                     BoardGrid(
                                       table: level.tableModel,
                                       size: 64,
-                                      semanticLabel:
-                                          'Objetivo del nivel ${levelNumber(level)}',
+                                      semanticLabel: l10n.levelGoal(
+                                        level.number,
+                                      ),
                                     ),
                                     const SizedBox(width: 16),
                                     Expanded(
@@ -168,7 +182,11 @@ class HomePage extends StatelessWidget {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            levelTitle(level),
+                                            levelTitle(
+                                              l10n,
+                                              level,
+                                              languageCode,
+                                            ),
                                             style: const TextStyle(
                                               fontSize: 18,
                                               fontWeight: FontWeight.w600,
@@ -176,7 +194,9 @@ class HomePage extends StatelessWidget {
                                           ),
                                           const SizedBox(height: 4),
                                           Text(
-                                            '${level.size} × ${level.size}${level.done ? ' · Completado' : ''}',
+                                            level.done
+                                                ? l10n.levelMetaDone(level.size)
+                                                : l10n.levelMeta(level.size),
                                           ),
                                         ],
                                       ),
@@ -185,7 +205,7 @@ class HomePage extends StatelessWidget {
                                     BoardGrid(
                                       table: level.tableBrush,
                                       size: 30,
-                                      semanticLabel: 'Sello',
+                                      semanticLabel: l10n.stamp,
                                     ),
                                     const SizedBox(width: 8),
                                     Icon(

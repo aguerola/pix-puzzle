@@ -6,14 +6,15 @@ import '../../data/models/level.dart';
 import '../../data/repositories/levels_repository.dart';
 
 enum Difficulty {
-  easy(1, 'Fácil'),
-  medium(2, 'Media'),
-  hard(3, 'Difícil');
+  easy(1),
+  medium(2),
+  hard(3);
 
-  const Difficulty(this.id, this.label);
+  const Difficulty(this.id);
   final int id;
-  final String label;
 }
+
+enum LevelsFailure { loadFailed, emptyCatalog }
 
 sealed class LevelsState extends Equatable {
   const LevelsState();
@@ -37,18 +38,15 @@ class LevelsLoaded extends LevelsState {
 }
 
 class LevelsError extends LevelsState {
-  const LevelsError(this.message);
-  final String message;
+  const LevelsError(this.failure);
+  final LevelsFailure failure;
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [failure];
 }
 
 class LevelsCubit extends Cubit<LevelsState> {
   LevelsCubit(this._repository) : super(const LevelsLoading());
-
-  static const loadFailedMessage = 'No pudimos cargar los niveles.';
-  static const emptyCatalogMessage = 'No hay niveles disponibles.';
 
   final LevelsRepository _repository;
   Difficulty _difficulty = Difficulty.easy;
@@ -58,13 +56,13 @@ class LevelsCubit extends Cubit<LevelsState> {
     try {
       await _repository.loadLevels();
       if (!_repository.hasLoadedLevels) {
-        emit(const LevelsError(emptyCatalogMessage));
+        emit(const LevelsError(LevelsFailure.emptyCatalog));
         return;
       }
       _emitLoaded();
     } catch (e, st) {
       debugPrint('LevelsCubit.load failed: $e\n$st');
-      emit(const LevelsError(loadFailedMessage));
+      emit(const LevelsError(LevelsFailure.loadFailed));
     }
   }
 

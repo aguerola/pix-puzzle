@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/models/level.dart';
+import '../../l10n/app_localizations.dart';
 import '../../theme/pix_theme.dart';
 import '../../widgets/board_grid.dart';
 import '../../widgets/pix_chrome.dart';
@@ -45,24 +46,22 @@ class _GameViewState extends State<_GameView> {
         await widget.levelsCubit.markDone(state.level.code);
       } catch (_) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                'Nivel completado. No pudimos guardar el progreso.',
-              ),
-            ),
-          );
+          final l10n = AppLocalizations.of(context);
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l10n.progressNotSaved)));
         }
       }
       if (!context.mounted) return;
       final next = widget.levelsCubit.nextLevel(state.level);
       final difficultyComplete =
           next == null && widget.levelsCubit.isDifficultyComplete(state.level);
+      final l10n = AppLocalizations.of(context);
       final action = await CompleteDialog.show(
         context,
         hasNext: next != null,
         difficultyComplete: difficultyComplete,
-        difficultyLabel: levelDifficulty(state.level),
+        difficultyLabel: levelDifficulty(l10n, state.level),
       );
       if (!context.mounted) return;
       context.read<GameBloc>().add(const CompleteAcknowledged());
@@ -88,20 +87,23 @@ class _GameViewState extends State<_GameView> {
     if (state.undoStack.isNotEmpty) {
       final confirmed = await showDialog<bool>(
         context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('¿Reiniciar el tablero?'),
-          content: const Text('Se eliminarán los toques de esta partida.'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancelar'),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('Reiniciar'),
-            ),
-          ],
-        ),
+        builder: (context) {
+          final l10n = AppLocalizations.of(context);
+          return AlertDialog(
+            title: Text(l10n.resetTitle),
+            content: Text(l10n.resetBody),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: Text(l10n.cancel),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: Text(l10n.reset),
+              ),
+            ],
+          );
+        },
       );
       if (confirmed != true || !context.mounted) return;
     }
@@ -112,62 +114,64 @@ class _GameViewState extends State<_GameView> {
     final bloc = context.read<GameBloc>();
     showDialog<void>(
       context: context,
-      builder: (context) => BlocProvider.value(
-        value: bloc,
-        child: Dialog.fullscreen(
-          child: Scaffold(
-            appBar: AppBar(
-              title: const Text('Tablero ampliado'),
-              leading: IconButton(
-                tooltip: 'Cerrar ampliación',
-                icon: const Icon(Icons.close),
-                onPressed: () => Navigator.pop(context),
+      builder: (context) {
+        final l10n = AppLocalizations.of(context);
+        return BlocProvider.value(
+          value: bloc,
+          child: Dialog.fullscreen(
+            child: Scaffold(
+              appBar: AppBar(
+                title: Text(l10n.expandedBoard),
+                leading: IconButton(
+                  tooltip: l10n.closeExpanded,
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.pop(context),
+                ),
               ),
-            ),
-            body: BlocConsumer<GameBloc, GameState>(
-              listenWhen: (previous, current) =>
-                  current.isComplete && !previous.isComplete,
-              listener: (context, current) => Navigator.pop(context),
-              builder: (context, current) => Column(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Text(
-                      'Arrastra para moverte. Toca para aplicar el sello.',
+              body: BlocConsumer<GameBloc, GameState>(
+                listenWhen: (previous, current) =>
+                    current.isComplete && !previous.isComplete,
+                listener: (context, current) => Navigator.pop(context),
+                builder: (context, current) => Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Text(l10n.expandedHint),
                     ),
-                  ),
-                  Expanded(
-                    child: InteractiveViewer(
-                      minScale: 1,
-                      maxScale: 3,
-                      constrained: false,
-                      boundaryMargin: const EdgeInsets.all(24),
-                      child: BoardGrid(
-                        table: current.level.tableBoard,
-                        size: math.max(480, current.level.size * 48),
-                        semanticLabel: 'Tablero ampliado',
-                        onCellTap: current.isComplete
-                            ? null
-                            : (x, y) => bloc.add(CellTapped(x, y)),
+                    Expanded(
+                      child: InteractiveViewer(
+                        minScale: 1,
+                        maxScale: 3,
+                        constrained: false,
+                        boundaryMargin: const EdgeInsets.all(24),
+                        child: BoardGrid(
+                          table: current.level.tableBoard,
+                          size: math.max(480, current.level.size * 48),
+                          semanticLabel: l10n.expandedBoard,
+                          onCellTap: current.isComplete
+                              ? null
+                              : (x, y) => bloc.add(CellTapped(x, y)),
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: OutlinedButton.icon(
-                      onPressed: current.undoStack.isEmpty || current.isComplete
-                          ? null
-                          : () => bloc.add(const UndoPressed()),
-                      icon: const Icon(Icons.undo),
-                      label: const Text('Deshacer'),
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: OutlinedButton.icon(
+                        onPressed:
+                            current.undoStack.isEmpty || current.isComplete
+                            ? null
+                            : () => bloc.add(const UndoPressed()),
+                        icon: const Icon(Icons.undo),
+                        label: Text(l10n.undo),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -178,6 +182,8 @@ class _GameViewState extends State<_GameView> {
     listener: _handleComplete,
     builder: (context, state) {
       final level = state.level;
+      final l10n = AppLocalizations.of(context);
+      final languageCode = levelLanguage(context);
       return Scaffold(
         body: SafeArea(
           child: LayoutBuilder(
@@ -202,7 +208,7 @@ class _GameViewState extends State<_GameView> {
                                 Expanded(
                                   child: PixBrand(
                                     mark: pixBackStamp,
-                                    tooltip: 'Niveles',
+                                    tooltip: l10n.levels,
                                     onPressed: () => Navigator.pop(
                                       context,
                                       GameExitAction.refresh,
@@ -214,14 +220,13 @@ class _GameViewState extends State<_GameView> {
                             ),
                             const SizedBox(height: 16),
                             Text(
-                              levelTitle(level),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displaySmall
-                                  ?.copyWith(fontSize: 36),
+                              levelTitle(l10n, level, languageCode),
+                              style: Theme.of(
+                                context,
+                              ).textTheme.displaySmall?.copyWith(fontSize: 36),
                             ),
                             const SizedBox(height: 10),
-                            PixLabel(levelDifficulty(level)),
+                            PixLabel(levelDifficulty(l10n, level)),
                             const SizedBox(height: 16),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -231,13 +236,14 @@ class _GameViewState extends State<_GameView> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const PixLabel('Objetivo'),
+                                      PixLabel(l10n.goal),
                                       const SizedBox(height: 8),
                                       BoardGrid(
                                         table: level.tableModel,
                                         size: targetSize,
-                                        semanticLabel:
-                                            'Objetivo ${level.size} por ${level.size}',
+                                        semanticLabel: l10n.goalSize(
+                                          level.size,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -248,16 +254,16 @@ class _GameViewState extends State<_GameView> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const PixLabel('Sello'),
+                                      PixLabel(l10n.stamp),
                                       const SizedBox(height: 8),
                                       BoardGrid(
                                         table: level.tableBrush,
                                         size: 56,
-                                        semanticLabel: 'Sello de tres por tres',
+                                        semanticLabel: l10n.stampSemantic,
                                       ),
                                       const SizedBox(height: 8),
-                                      const Text(
-                                        'Invierte las casillas del sello.',
+                                      Text(
+                                        l10n.stampHint,
                                         style: TextStyle(
                                           fontSize: 13,
                                           height: 1.3,
@@ -275,10 +281,8 @@ class _GameViewState extends State<_GameView> {
                               spacing: 16,
                               runSpacing: 8,
                               children: [
-                                const PixLabel('Tu tablero'),
-                                Text(
-                                  '${state.undoStack.length} ${state.undoStack.length == 1 ? 'toque' : 'toques'}',
-                                ),
+                                PixLabel(l10n.yourBoard),
+                                Text(l10n.tapCount(state.undoStack.length)),
                               ],
                             ),
                             const SizedBox(height: 10),
@@ -294,7 +298,7 @@ class _GameViewState extends State<_GameView> {
                                 child: BoardGrid(
                                   table: level.tableBoard,
                                   size: boardSize,
-                                  semanticLabel: 'Tu tablero',
+                                  semanticLabel: l10n.yourBoard,
                                   highlight: state.undoStack.isEmpty
                                       ? null
                                       : (
@@ -310,9 +314,9 @@ class _GameViewState extends State<_GameView> {
                               ),
                             ),
                             const SizedBox(height: 12),
-                            const Center(
+                            Center(
                               child: Text(
-                                'Reproduce el patrón del objetivo.',
+                                l10n.matchGoal,
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -322,7 +326,7 @@ class _GameViewState extends State<_GameView> {
                                 child: TextButton.icon(
                                   onPressed: () => _expand(context, state),
                                   icon: const Icon(Icons.zoom_in),
-                                  label: const Text('Ampliar tablero'),
+                                  label: Text(l10n.expandBoard),
                                 ),
                               ),
                             const SizedBox(height: 12),
@@ -338,14 +342,14 @@ class _GameViewState extends State<_GameView> {
                                             const UndoPressed(),
                                           ),
                                     icon: const Icon(Icons.undo),
-                                    label: const Text('Deshacer'),
+                                    label: Text(l10n.undo),
                                   ),
                                   OutlinedButton.icon(
                                     onPressed: state.isComplete
                                         ? null
                                         : () => _reset(context, state),
                                     icon: const Icon(Icons.restart_alt),
-                                    label: const Text('Reiniciar'),
+                                    label: Text(l10n.reset),
                                   ),
                                 ];
                                 if (MediaQuery.textScalerOf(context).scale(16) >
@@ -382,13 +386,18 @@ class _GameViewState extends State<_GameView> {
                                     GameExitAction.refresh,
                                   ),
                                   icon: const Icon(Icons.arrow_back),
-                                  label: const Text('Niveles'),
+                                  label: Text(l10n.levels),
                                 ),
                                 BlocBuilder<LevelsCubit, LevelsState>(
                                   bloc: widget.levelsCubit,
                                   builder: (context, loaded) => Text(
                                     loaded is LevelsLoaded
-                                        ? '${loaded.levels.where((l) => l.done).length} de ${loaded.levels.length}'
+                                        ? l10n.progressFraction(
+                                            loaded.levels
+                                                .where((l) => l.done)
+                                                .length,
+                                            loaded.levels.length,
+                                          )
                                         : '',
                                   ),
                                 ),

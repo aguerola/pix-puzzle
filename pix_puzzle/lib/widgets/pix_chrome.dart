@@ -1,27 +1,34 @@
 import 'package:flutter/material.dart';
 import '../data/models/board_cell.dart';
 import '../data/models/level.dart';
+import '../l10n/app_localizations.dart';
 import 'board_grid.dart';
+
+String levelLanguage(BuildContext context) =>
+    Localizations.localeOf(context).languageCode;
 
 String levelNumber(Level level) => level.number.toString();
 
-/// Visible headline: `Nivel 2 · Pajarita`, or `Nivel 2` when [Level.title] is empty.
-String levelTitle(Level level) {
-  final number = levelNumber(level);
-  if (level.title.isEmpty) return 'Nivel $number';
-  return 'Nivel $number · ${level.title}';
+/// Visible headline: `Nivel 2 · Pajarita`, or `Nivel 2` when the level has no name.
+String levelTitle(AppLocalizations l10n, Level level, String languageCode) {
+  final name = level.localizedTitle(languageCode);
+  if (name.isEmpty) return l10n.levelHeadingUntitled(level.number);
+  return l10n.levelHeading(level.number, name);
 }
 
 /// Short label for CTAs (e.g. "pajarita", "nivel 2").
-String levelPlayLabel(Level level) => level.title.isEmpty
-    ? 'nivel ${levelNumber(level)}'
-    : level.title.toLowerCase();
+String levelPlayLabel(AppLocalizations l10n, Level level, String languageCode) {
+  final name = level.localizedTitle(languageCode);
+  if (name.isEmpty) return l10n.playLabelUntitled(level.number);
+  return name.toLowerCase();
+}
 
-String levelDifficulty(Level level) => switch (level.difficulty) {
-  1 => 'Fácil',
-  2 => 'Media',
-  _ => 'Difícil',
-};
+String levelDifficulty(AppLocalizations l10n, Level level) =>
+    switch (level.difficulty) {
+      1 => l10n.difficultyEasy,
+      2 => l10n.difficultyMedium,
+      _ => l10n.difficultyHard,
+    };
 
 /// Center-only 3×3 stamp — same table shape as the in-game brush widget.
 final List<List<BoardCell>> pixBrandStamp = List.generate(
@@ -77,7 +84,7 @@ class PixBrand extends StatelessWidget {
     if (onPressed == null) return row;
     return Semantics(
       button: true,
-      label: tooltip ?? 'Volver',
+      label: tooltip ?? AppLocalizations.of(context).back,
       child: InkWell(
         onTap: onPressed,
         borderRadius: BorderRadius.circular(8),
@@ -108,7 +115,7 @@ class PixHelpButton extends StatelessWidget {
   const PixHelpButton({super.key});
   @override
   Widget build(BuildContext context) => IconButton(
-    tooltip: 'Cómo jugar',
+    tooltip: AppLocalizations.of(context).howToPlay,
     icon: const Icon(Icons.help_outline),
     onPressed: () => showPixHelp(context),
   );
@@ -116,18 +123,17 @@ class PixHelpButton extends StatelessWidget {
 
 Future<void> showPixHelp(BuildContext context) => showDialog<void>(
   context: context,
-  builder: (context) => AlertDialog(
-    title: const Text('Cada toque invierte'),
-    content: const SingleChildScrollView(
-      child: Text(
-        'Reproduce el patrón del objetivo en tu tablero.\n\nEl centro del sello se coloca en la casilla que tocas. Cada casilla negra del sello invierte el tablero: una vacía se llena y una llena se vacía.\n\nDos aplicaciones sobre una misma casilla se cancelan. En los bordes, el sello se recorta. Puedes deshacer cualquier toque.',
-      ),
-    ),
-    actions: [
-      TextButton(
-        onPressed: () => Navigator.pop(context),
-        child: const Text('Entendido'),
-      ),
-    ],
-  ),
+  builder: (context) {
+    final l10n = AppLocalizations.of(context);
+    return AlertDialog(
+      title: Text(l10n.helpTitle),
+      content: SingleChildScrollView(child: Text(l10n.helpBody)),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(l10n.gotIt),
+        ),
+      ],
+    );
+  },
 );

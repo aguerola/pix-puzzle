@@ -1,0 +1,132 @@
+{
+  "@@locale": "en",
+  "back": "Back",
+  "howToPlay": "How to play",
+  "helpTitle": "Each tap flips",
+  "helpBody": "Match the goal pattern on your board.\n\nThe center of the stamp lands on the cell you tap. Each filled cell of the stamp flips the board: an empty cell fills and a filled cell empties.\n\nTwo stamps on the same cell cancel out. At the edges, the stamp is clipped. You can undo any tap.",
+  "gotIt": "Got it",
+  "levelHeading": "Level {number} · {name}",
+  "@levelHeading": {
+    "placeholders": {
+      "number": {"type": "int"},
+      "name": {"type": "String"}
+    }
+  },
+  "levelHeadingUntitled": "Level {number}",
+  "@levelHeadingUntitled": {
+    "placeholders": {
+      "number": {"type": "int"}
+    }
+  },
+  "playLabelUntitled": "level {number}",
+  "@playLabelUntitled": {
+    "placeholders": {
+      "number": {"type": "int"}
+    }
+  },
+  "difficultyEasy": "Easy",
+  "difficultyMedium": "Medium",
+  "difficultyHard": "Hard",
+  "tagline": "One tap.\nAnother pattern.",
+  "subtitle": "Pick a challenge and find its balance.",
+  "completedCount": "{done} of {total} completed",
+  "@completedCount": {
+    "placeholders": {
+      "done": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "playLevel": "Play {label}",
+  "@playLevel": {
+    "placeholders": {
+      "label": {"type": "String"}
+    }
+  },
+  "noLevelsInDifficulty": "No levels in this difficulty. Try another.",
+  "yourChallenges": "Your challenges",
+  "levelGoal": "Goal for level {number}",
+  "@levelGoal": {
+    "placeholders": {
+      "number": {"type": "int"}
+    }
+  },
+  "levelMeta": "{size} × {size}",
+  "@levelMeta": {
+    "placeholders": {
+      "size": {"type": "int"}
+    }
+  },
+  "levelMetaDone": "{size} × {size} · Done",
+  "@levelMetaDone": {
+    "placeholders": {
+      "size": {"type": "int"}
+    }
+  },
+  "stamp": "Stamp",
+  "retry": "Retry",
+  "loadFailed": "We couldn't load the levels.",
+  "emptyCatalog": "No levels available.",
+  "progressNotSaved": "Level complete. We couldn't save your progress.",
+  "resetTitle": "Reset the board?",
+  "resetBody": "The taps in this game will be removed.",
+  "cancel": "Cancel",
+  "reset": "Reset",
+  "expandedBoard": "Expanded board",
+  "closeExpanded": "Close expanded view",
+  "expandedHint": "Drag to move. Tap to apply the stamp.",
+  "undo": "Undo",
+  "levels": "Levels",
+  "goal": "Goal",
+  "goalSize": "Goal {size} by {size}",
+  "@goalSize": {
+    "placeholders": {
+      "size": {"type": "int"}
+    }
+  },
+  "stampSemantic": "Three-by-three stamp",
+  "stampHint": "Flips the cells in the stamp.",
+  "yourBoard": "Your board",
+  "tapCount": "{count, plural, =1{1 tap} other{{count} taps}}",
+  "@tapCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "matchGoal": "Match the goal pattern.",
+  "expandBoard": "Expand board",
+  "progressFraction": "{done} of {total}",
+  "@progressFraction": {
+    "placeholders": {
+      "done": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "difficultyCompleteTitle": "Difficulty complete!",
+  "levelCompleteTitle": "Level complete!",
+  "difficultyCompleteBody": "You finished every {difficulty} level.",
+  "@difficultyCompleteBody": {
+    "placeholders": {
+      "difficulty": {"type": "String"}
+    }
+  },
+  "difficultyCompleteBodyPlain": "You finished every level.",
+  "groupEndBody": "You've reached the end of this group. Some levels are still unfinished.",
+  "reproducedGoal": "You matched the goal.",
+  "repeat": "Replay",
+  "next": "Next",
+  "backToLevels": "Back to levels",
+  "cellFilled": "Row {row}, column {column}, filled",
+  "@cellFilled": {
+    "placeholders": {
+      "row": {"type": "int"},
+      "column": {"type": "int"}
+    }
+  },
+  "cellEmpty": "Row {row}, column {column}, empty",
+  "@cellEmpty": {
+    "placeholders": {
+      "row": {"type": "int"},
+      "column": {"type": "int"}
+    }
+  }
+}

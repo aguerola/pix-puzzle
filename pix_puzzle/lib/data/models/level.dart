@@ -25,8 +25,16 @@ class Level extends Equatable {
   /// Order within [difficulty]. Unique in that group.
   final int number;
 
-  /// Visible name, already capitalized. Empty when the level has none.
-  final String title;
+  /// Display names keyed by language code (`es`, `en`).
+  final Map<String, String> title;
+
+  /// Name for [languageCode], or the Spanish name when that language is missing.
+  String localizedTitle(String languageCode) {
+    final translated = title[languageCode];
+    if (translated != null && translated.isNotEmpty) return translated;
+    return title['es'] ?? '';
+  }
+
   final List<List<BoardCell>> tableBoard;
   final List<List<BoardCell>> tableModel;
   final List<List<BoardCell>> tableBrush;
@@ -37,7 +45,7 @@ class Level extends Equatable {
     int? size,
     int? difficulty,
     int? number,
-    String? title,
+    Map<String, String>? title,
     List<List<BoardCell>>? tableBoard,
     List<List<BoardCell>>? tableModel,
     List<List<BoardCell>>? tableBrush,
@@ -62,7 +70,7 @@ class Level extends Equatable {
       size: json['size'] as int,
       difficulty: json['difficulty'] as int,
       number: json['number'] as int,
-      title: json['title'] as String,
+      title: _titleFromJson(json['title']),
       tableBoard: _tableFromJson(json['tableBoard']),
       tableModel: _tableFromJson(json['tableModel']),
       tableBrush: _tableFromJson(json['tableBrush']),
@@ -81,6 +89,11 @@ class Level extends Equatable {
     'tableBrush': _tableToJson(tableBrush),
     'done': done,
   };
+
+  static Map<String, String> _titleFromJson(dynamic raw) {
+    final map = raw as Map<dynamic, dynamic>;
+    return map.map((key, value) => MapEntry(key as String, value as String));
+  }
 
   static List<List<BoardCell>> _tableFromJson(dynamic raw) {
     final outer = raw as List<dynamic>;

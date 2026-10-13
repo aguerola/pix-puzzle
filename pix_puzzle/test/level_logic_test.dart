@@ -54,7 +54,8 @@ void main() {
       expect(
         seen.add((level.difficulty, level.number)),
         isTrue,
-        reason: '${level.difficulty} ${level.number} ${level.title}',
+        reason:
+            '${level.difficulty} ${level.number} ${level.localizedTitle('es')}',
       );
     }
   });

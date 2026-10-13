@@ -1,0 +1,132 @@
+{
+  "@@locale": "es",
+  "back": "Volver",
+  "howToPlay": "Cómo jugar",
+  "helpTitle": "Cada toque invierte",
+  "helpBody": "Reproduce el patrón del objetivo en tu tablero.\n\nEl centro del sello se coloca en la casilla que tocas. Cada casilla negra del sello invierte el tablero: una vacía se llena y una llena se vacía.\n\nDos aplicaciones sobre una misma casilla se cancelan. En los bordes, el sello se recorta. Puedes deshacer cualquier toque.",
+  "gotIt": "Entendido",
+  "levelHeading": "Nivel {number} · {name}",
+  "@levelHeading": {
+    "placeholders": {
+      "number": {"type": "int"},
+      "name": {"type": "String"}
+    }
+  },
+  "levelHeadingUntitled": "Nivel {number}",
+  "@levelHeadingUntitled": {
+    "placeholders": {
+      "number": {"type": "int"}
+    }
+  },
+  "playLabelUntitled": "nivel {number}",
+  "@playLabelUntitled": {
+    "placeholders": {
+      "number": {"type": "int"}
+    }
+  },
+  "difficultyEasy": "Fácil",
+  "difficultyMedium": "Media",
+  "difficultyHard": "Difícil",
+  "tagline": "Un toque.\nOtro patrón.",
+  "subtitle": "Elige un reto y encuentra su equilibrio.",
+  "completedCount": "{done} de {total} completados",
+  "@completedCount": {
+    "placeholders": {
+      "done": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "playLevel": "Jugar {label}",
+  "@playLevel": {
+    "placeholders": {
+      "label": {"type": "String"}
+    }
+  },
+  "noLevelsInDifficulty": "No hay niveles en esta dificultad. Prueba otra.",
+  "yourChallenges": "Tus retos",
+  "levelGoal": "Objetivo del nivel {number}",
+  "@levelGoal": {
+    "placeholders": {
+      "number": {"type": "int"}
+    }
+  },
+  "levelMeta": "{size} × {size}",
+  "@levelMeta": {
+    "placeholders": {
+      "size": {"type": "int"}
+    }
+  },
+  "levelMetaDone": "{size} × {size} · Completado",
+  "@levelMetaDone": {
+    "placeholders": {
+      "size": {"type": "int"}
+    }
+  },
+  "stamp": "Sello",
+  "retry": "Reintentar",
+  "loadFailed": "No pudimos cargar los niveles.",
+  "emptyCatalog": "No hay niveles disponibles.",
+  "progressNotSaved": "Nivel completado. No pudimos guardar el progreso.",
+  "resetTitle": "¿Reiniciar el tablero?",
+  "resetBody": "Se eliminarán los toques de esta partida.",
+  "cancel": "Cancelar",
+  "reset": "Reiniciar",
+  "expandedBoard": "Tablero ampliado",
+  "closeExpanded": "Cerrar ampliación",
+  "expandedHint": "Arrastra para moverte. Toca para aplicar el sello.",
+  "undo": "Deshacer",
+  "levels": "Niveles",
+  "goal": "Objetivo",
+  "goalSize": "Objetivo {size} por {size}",
+  "@goalSize": {
+    "placeholders": {
+      "size": {"type": "int"}
+    }
+  },
+  "stampSemantic": "Sello de tres por tres",
+  "stampHint": "Invierte las casillas del sello.",
+  "yourBoard": "Tu tablero",
+  "tapCount": "{count, plural, =1{1 toque} other{{count} toques}}",
+  "@tapCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "matchGoal": "Reproduce el patrón del objetivo.",
+  "expandBoard": "Ampliar tablero",
+  "progressFraction": "{done} de {total}",
+  "@progressFraction": {
+    "placeholders": {
+      "done": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "difficultyCompleteTitle": "¡Dificultad completada!",
+  "levelCompleteTitle": "¡Nivel completado!",
+  "difficultyCompleteBody": "Has terminado todos los niveles de {difficulty}.",
+  "@difficultyCompleteBody": {
+    "placeholders": {
+      "difficulty": {"type": "String"}
+    }
+  },
+  "difficultyCompleteBodyPlain": "Has terminado todos los niveles.",
+  "groupEndBody": "Has llegado al final del grupo. Aún quedan niveles pendientes.",
+  "reproducedGoal": "Has reproducido el objetivo.",
+  "repeat": "Repetir",
+  "next": "Siguiente",
+  "backToLevels": "Volver a niveles",
+  "cellFilled": "Fila {row}, columna {column}, llena",
+  "@cellFilled": {
+    "placeholders": {
+      "row": {"type": "int"},
+      "column": {"type": "int"}
+    }
+  },
+  "cellEmpty": "Fila {row}, columna {column}, vacía",
+  "@cellEmpty": {
+    "placeholders": {
+      "row": {"type": "int"},
+      "column": {"type": "int"}
+    }
+  }
+}

@@ -22,26 +22,23 @@ class _EmptyRepository extends LevelsRepository {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('load failure emits a user-facing message, not toString', () async {
+  test('load failure emits a failure kind, not the exception', () async {
     SharedPreferences.setMockInitialValues({});
     final cubit = LevelsCubit(_FailingRepository());
     await cubit.load();
     final state = cubit.state;
     expect(state, isA<LevelsError>());
-    final error = state as LevelsError;
-    expect(error.message, LevelsCubit.loadFailedMessage);
-    expect(error.message.contains('StateError'), isFalse);
-    expect(error.message.contains('asset missing'), isFalse);
+    expect((state as LevelsError).failure, LevelsFailure.loadFailed);
     await cubit.close();
   });
 
-  test('empty catalog emits a distinct user-facing message', () async {
+  test('empty catalog emits a distinct failure', () async {
     SharedPreferences.setMockInitialValues({});
     final cubit = LevelsCubit(_EmptyRepository());
     await cubit.load();
     final state = cubit.state;
     expect(state, isA<LevelsError>());
-    expect((state as LevelsError).message, LevelsCubit.emptyCatalogMessage);
+    expect((state as LevelsError).failure, LevelsFailure.emptyCatalog);
     await cubit.close();
   });
 }

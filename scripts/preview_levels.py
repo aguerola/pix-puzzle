@@ -182,6 +182,13 @@ def render_sheet(levels: list[dict], out: Path, cell: int) -> None:
     canvas.save(out / "sheet.png")
 
 
+def _spanish_title(level: dict) -> str:
+    title = level["title"]
+    if isinstance(title, dict):
+        return title.get("es") or ""
+    return str(title)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -212,7 +219,7 @@ def main() -> None:
     for level in levels:
         rows = render_level(level, args.out, args.cell)
         print(
-            f"\n{level['difficulty']}.{level['number']} {level['title']}  {level['size']}×{level['size']}"
+            f"\n{level['difficulty']}.{level['number']} {_spanish_title(level)}  {level['size']}×{level['size']}"
         )
         print(ascii_grid(rows))
     render_sheet(levels, args.out, cell=18)

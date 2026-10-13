@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../data/models/board_cell.dart';
+import '../l10n/app_localizations.dart';
 import '../theme/pix_theme.dart';
 
 /// Tables retain [x][y] indexing. Native buttons commit on release.
@@ -22,6 +23,7 @@ class BoardGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     if (table.isEmpty) return SizedBox.square(dimension: size);
     final n = table.length;
+    final l10n = AppLocalizations.of(context);
     return Semantics(
       label: semanticLabel,
       child: SizedBox.square(
@@ -42,8 +44,9 @@ class BoardGrid extends StatelessWidget {
                                 key: ValueKey((x, y)),
                                 filled: table[x][y].fill,
                                 highlighted: highlight == (x, y),
-                                label:
-                                    'Fila ${y + 1}, columna ${x + 1}, ${table[x][y].fill ? 'llena' : 'vacía'}',
+                                label: table[x][y].fill
+                                    ? l10n.cellFilled(y + 1, x + 1)
+                                    : l10n.cellEmpty(y + 1, x + 1),
                                 onPressed: () => onCellTap!(x, y),
                               ),
                       ),
